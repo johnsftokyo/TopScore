@@ -1,22 +1,19 @@
 package com.top.score.response;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.top.score.domain.Score;
 
-public class ScoreResponse extends BaseResponse {
+public class PlayerResponse extends BaseResponse {
 	
-	@JsonIgnore
 	private List<Score> scoreList;
-	private List<Long> scores;
 	private int page;
 	private long totalElements;
+	private Double avg;
 	
-	public ScoreResponse() {}
+	public PlayerResponse() {}
 	
-	public ScoreResponse(List<Score> scoreList) {
+	public PlayerResponse(List<Score> scoreList) {
 		this.scoreList = scoreList;
 	}
 
@@ -47,12 +44,12 @@ public class ScoreResponse extends BaseResponse {
 	public void setTotalElements(long totalElements) {
 		this.totalElements = totalElements;
 	}
-	
-	public List<Long> getScores() {
-		return scores;
+
+	public Double getAvg() {
+		return avg;
 	}
 
-	public void prepareResponse() {
-		scores = scoreList.stream().map(s -> s.getScore()).collect(Collectors.toList());
+	public void setAvg(Double avg) {
+		this.avg = avg;
 	}
 }
