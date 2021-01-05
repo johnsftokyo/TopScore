@@ -14,10 +14,10 @@ import com.top.score.entity.ScoreEntity;
 
 @Repository
 public interface ScoreRepository extends PagingAndSortingRepository<ScoreEntity, Long> {
-	
+		
     @Query(
     	value =	"SELECT * FROM score WHERE created_date >= :afterDate AND created_date <= :beforeDate",
-    	countQuery = "SELECT count(*) FROM score",
+    	countQuery = "SELECT count(*) FROM score WHERE created_date >= :afterDate AND created_date <= :beforeDate",
     	nativeQuery = true
     )
 	Page<ScoreEntity> findByDateRange(Pageable pageable, @Param("afterDate") ZonedDateTime afterDate,  
@@ -25,7 +25,7 @@ public interface ScoreRepository extends PagingAndSortingRepository<ScoreEntity,
     
     @Query(
         	value =	"SELECT * FROM score WHERE player_name IN (:playerNames) AND created_date >= :afterDate AND created_date <= :beforeDate",
-        	countQuery = "SELECT count(*) FROM score",
+        	countQuery = "SELECT count(*) FROM score WHERE player_name IN (:playerNames) AND created_date >= :afterDate AND created_date <= :beforeDate",
         	nativeQuery = true
     )
     Page<ScoreEntity> findByPlayersDateRange(Pageable pageable, @Param("playerNames") List<String> playerNames, 

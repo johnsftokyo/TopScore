@@ -46,5 +46,10 @@ public class SaveScoreRequest extends BaseRequest {
 			
 		if(paramList.size() > 0)
 			throw new ScoreRequestException("Invalid or Missing", paramList.toArray(new String[paramList.size()]));
+		
+		//player name is case insensitive in our app.
+		if(playerName != null) {
+			playerName = playerName.toLowerCase();
+		}
 	}
 }
