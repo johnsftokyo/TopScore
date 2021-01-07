@@ -9,6 +9,8 @@ public class Score {
 	private long score;
 	private String playerName;
 	
+	public Score() {}
+			
 	public Score(long id, Instant createTime, long score, String playerName) {
 		this.id = id;
 		this.createTime = createTime;

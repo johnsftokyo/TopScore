@@ -1,5 +1,7 @@
-CREATE DATABASE IF NOT EXISTS test;
-USE test;
+CREATE DATABASE IF NOT EXISTS score;
+USE score;
+
+DROP TABLE IF EXISTS score;
 
 CREATE TABLE IF NOT EXISTS score (
 id BIGINT NOT NULL AUTO_INCREMENT,
@@ -80,3 +82,5 @@ INSERT INTO score (created_date, player_name, score) VALUES('2019-11-07 05:26:35
 INSERT INTO score (created_date, player_name, score) VALUES('2019-12-13 11:10:06', 'test_player', 28);
 INSERT INTO score (created_date, player_name, score) VALUES('2019-12-19 16:06:49', 'test_player', 29);
 INSERT INTO score (created_date, player_name, score) VALUES('2019-12-23 20:35:22', 'test_player', 30);
+
+INSERT INTO score (created_date, player_name, score) VALUES('2019-12-25 20:35:22', 'del_player', 30);

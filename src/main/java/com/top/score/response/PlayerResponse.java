@@ -2,8 +2,10 @@ package com.top.score.response;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.top.score.domain.Score;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlayerResponse extends BaseResponse {
 	
 	private List<Score> scoreList;

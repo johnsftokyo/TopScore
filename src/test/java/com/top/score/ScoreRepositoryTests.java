@@ -1,6 +1,7 @@
 package com.top.score;
 
 
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,9 @@ import com.top.score.entity.ScoreEntity;
 @ActiveProfiles("integration") //loads application-integration.properties
 @Testcontainers
 @SpringBootTest
-@ContextConfiguration(initializers = {ScoreRepositoryTests.Initializer.class})
+@ContextConfiguration(
+	initializers = {ScoreRepositoryTests.Initializer.class}
+)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql({"/init_test.sql"})
 public class ScoreRepositoryTests {
@@ -48,7 +50,6 @@ public class ScoreRepositoryTests {
     @Autowired
     private ScoreRepository scoreRepository;
     
-    private String playerName = "integration_player";
     private int createEntityCount = 20;
     private int perPage = 5;
       
@@ -58,16 +59,15 @@ public class ScoreRepositoryTests {
         assertTrue(MY_SQL_CONTAINER.isRunning());
     }
     
-//    @Disabled
     @Test
     public void saveNFetch() throws InterruptedException {
-    	
+    	String testPlayerName = "integration_player";
     	ZonedDateTime startTime = ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"));
-    	startTime = startTime.truncatedTo(ChronoUnit.SECONDS);
+    	startTime = startTime.truncatedTo(ChronoUnit.MINUTES);
     	
         for(int i=0; i<=createEntityCount; i++) {
         	ScoreEntity scoreEntity = new ScoreEntity();
-            scoreEntity.setPlayerName(playerName);
+            scoreEntity.setPlayerName(testPlayerName);
             scoreEntity.setScore(i);
             scoreRepository.save(scoreEntity);
             Thread.sleep(1000);
@@ -76,7 +76,7 @@ public class ScoreRepositoryTests {
         ZonedDateTime endTime = ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"));
         
         List<String> names = new ArrayList<>();
-        names.add(playerName);
+        names.add(testPlayerName);
        
         Pageable firstPage = PageRequest.of(0, perPage);
         Page<ScoreEntity> firstPageResult = scoreRepository.findByPlayersDateRange(firstPage, names, startTime, endTime);
@@ -86,6 +86,28 @@ public class ScoreRepositoryTests {
         Page<ScoreEntity> lastPageResult = scoreRepository.findByPlayersDateRange(lastPage, names, startTime, endTime);
         assertTrue(lastPageResult.getContent().get(lastPageResult.getContent().size() - 1).getScore() == createEntityCount);
     }
+    
+    @Test
+    public void deleteScore() throws InterruptedException {
+        ZonedDateTime startTime = ZonedDateTime.parse("2019-12-23T01:51:37+00:00[UTC]");
+        ZonedDateTime endTime = ZonedDateTime.parse("2019-12-26T01:51:37+00:00[UTC]");
+        String testDelPlayerName = "del_player";
+        
+        List<String> names = new ArrayList<>();
+        names.add(testDelPlayerName);
+    	Pageable firstPage = PageRequest.of(0, perPage);
+    	Page<ScoreEntity> beforeDelpage = scoreRepository.findByPlayersDateRange(firstPage, names, startTime, endTime);
+ 
+    	ScoreEntity score = beforeDelpage.getContent().get(0);
+    	
+    	assertTrue(score.getPlayerName().equalsIgnoreCase(testDelPlayerName));
+    	
+        scoreRepository.delete(score);
+        
+    	Page<ScoreEntity> afterDelPage = scoreRepository.findByPlayersDateRange(firstPage, names, startTime, endTime);
+
+        assertTrue(afterDelPage.getTotalElements() == 0);
+    }    
     
     @Test
     public void getAverageScore() {

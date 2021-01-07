@@ -16,6 +16,7 @@ import com.top.score.dao.ScoreRepository;
 import com.top.score.entity.ScoreEntity;
 import com.top.score.request.GetPlayerRequest;
 import com.top.score.request.GetScoreRequest;
+import com.top.score.request.RemoveScoreRequest;
 import com.top.score.request.SaveScoreRequest;
 
 
@@ -122,22 +123,29 @@ public class ScoreMgr {
 		ScoreEntity scoreDo = new ScoreEntity();
 		scoreDo.setPlayerName(request.getPlayerName());
 		scoreDo.setScore(request.getScore());
-		dao.save(scoreDo);
+		ScoreEntity savedScore = dao.save(scoreDo);
 		
 		List<ScoreEntity> entityList = new ArrayList<>(1);
-		entityList.add(scoreDo);
+		
+		entityList.add(savedScore);
 		List<Score> scoreList = entityList.stream().map(e -> convertEntityToBiz(e)).collect(Collectors.toList());
 		
-		ScoreResult res = new ScoreResult();
-		res.setStatus(BizResult.Status.FAIL);
-		
-		if(scoreList.size() > 0) {
-			res = new ScoreResult(scoreList);
-			res.setStatus(BizResult.Status.SUCCESS);
-		}
+		ScoreResult res = new ScoreResult(scoreList);
+		res.setStatus(BizResult.Status.SUCCESS);
 
 		return res;
 	}
+	
+	public ScoreResult removeScore(RemoveScoreRequest request) {
+		ScoreEntity scoreDo = new ScoreEntity();
+		scoreDo.setId(request.getId());
+		dao.delete(scoreDo);
+			
+		ScoreResult res = new ScoreResult();
+		res.setStatus(BizResult.Status.SUCCESS);
+
+		return res;
+	}	
 	
 	public Score convertEntityToBiz(ScoreEntity e) {
 		Score s = new Score(e.getId(), e.getCreatedDate(), e.getScore(), e.getPlayerName());

@@ -23,6 +23,7 @@ import com.top.score.error.ScoreRequestException;
 import com.top.score.request.BaseRequest;
 import com.top.score.request.GetPlayerRequest;
 import com.top.score.request.GetScoreRequest;
+import com.top.score.request.RemoveScoreRequest;
 import com.top.score.request.SaveScoreRequest;
 import com.top.score.response.ErrorResponse;
 import com.top.score.response.PlayerResponse;
@@ -97,6 +98,20 @@ public class ScoreController {
 		
 		return rsp;
 	}
+	
+	@PostMapping(path="/score/remove", consumes="application/json", produces="application/json")
+	@ResponseBody
+	public ScoreResponse removeScore(@Valid @RequestBody RemoveScoreRequest request) {
+		request.validateRequest();
+		ScoreResult bizRes = scoreMgr.removeScore(request);
+		
+		ScoreResponse rsp = new ScoreResponse();
+		if(bizRes.getStatus() == BizResult.Status.FAIL) {
+			rsp.setMessage("Failed to save score");
+		}
+		
+		return rsp;
+	}	
 	
     @ExceptionHandler
     public Map<String, String> handleValidationError(MethodArgumentNotValidException e) {
