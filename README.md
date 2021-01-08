@@ -131,6 +131,8 @@ Note: tests triggered by gradle will fail if Docker is not running on your machi
 
 If deploying to production or local development the Web application requires a MySQL database to be running. The required table schema can be created from the file located at "\src\main\resources\init.sql". Please update the DB settings in application.properties when the MySQL instance is running.
 
+Note: a WAR file can be produced by the gradle command "gradle war" for deployment to Tomcat. The WAR file location is displayed on the gradle output console.
+
 ## Unit / Integration Test
 
 Unit test:
