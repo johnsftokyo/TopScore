@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import com.top.score.constants.Constants;
@@ -36,6 +37,7 @@ public class GetPlayerRequest extends BaseRequest {
 	private int page = Constants.DEFAULT_PAGE;
 	
 	@Digits(integer=9, fraction=0)
+	@Positive
 	private int perPage = Constants.PER_PAGE;
 	
 	public FilterBy getFilterBy() {

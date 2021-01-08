@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +36,7 @@ public class GetScoreRequest extends BaseRequest {
 	private int page = Constants.DEFAULT_PAGE;
 	
 	@Digits(integer=9, fraction=0)
+	@Positive
 	private int perPage = Constants.PER_PAGE;
 
 	public long getId() {
